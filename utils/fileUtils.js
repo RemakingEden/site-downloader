@@ -67,17 +67,14 @@ export function generateDownloadPath(filename, mimeType, url, isMainPage = false
 }
 
 /**
- * Creates necessary directories for file organization
+ * Ensures the download path is properly structured
  * @param {browser.downloads.DownloadItem} downloadItem - The download item
- * @returns {Promise<void>}
+ * @returns {Promise<string>} The prepared download path
  */
 export async function ensureDirectoryStructure(downloadItem) {
   const folder = determineFileType(downloadItem.filename, downloadItem.mime);
   
-  try {
-    // Create directory if it doesn't exist
-    await browser.downloads.createDirectory(folder);
-  } catch (error) {
-    console.error(`Error creating directory ${folder}:`, error);
-  }
+  // Firefox doesn't support direct directory creation
+  // Instead, we'll return the folder path to be used when saving the file
+  return folder;
 } 
