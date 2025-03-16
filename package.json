@@ -13,6 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "build": "web-ext build",
     "start": "web-ext run",
+    "web-ext-lint": "web-ext lint",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix"
   },
