@@ -1,6 +1,6 @@
-# Website Downloader - Firefox Extension
+# Site Downloader - Firefox Extension
 
-A Firefox browser extension that allows users to download websites for offline viewing. Built with modern JavaScript and follows Firefox's WebExtensions API standards.
+A Firefox browser extension that allows users to download files from websites.
 
 ## Installation
 
@@ -8,8 +8,8 @@ A Firefox browser extension that allows users to download websites for offline v
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/firefox-download-js.git
-cd firefox-download-js
+git clone https://github.com/RemakingEden/site-downloader
+cd site-downloader
 ```
 
 2. Install dependencies:
@@ -60,7 +60,6 @@ firefox-download-js/
 The project uses Vitest for testing. Tests are categorized into:
 - Unit tests
 - Integration tests
-- UI tests
 
 Run all tests with `npm test` or specific test suites using the appropriate npm script.
 
@@ -91,13 +90,3 @@ The project uses GitHub Actions for CI/CD with the following checks:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Security
-
-- The extension follows Firefox's content security policy
-- Regular security audits are performed through CI/CD
-- Dependencies are regularly updated and monitored
-
-## Support
-
-For support, please open an issue in the GitHub repository. 
