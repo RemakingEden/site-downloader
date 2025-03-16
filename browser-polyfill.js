@@ -1062,3 +1062,8 @@
         /**
          * Wraps an onRequestFinished listener function so that it will return a
          * `getContent()` property which returns a `Promise`
+         */
+      });
+    }
+  }
+});
