@@ -12,7 +12,9 @@
     "test:all": "vitest run",
     "test:coverage": "vitest run --coverage",
     "build": "web-ext build",
-    "start": "web-ext run"
+    "start": "web-ext run",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix"
   },
   "keywords": [
     "firefox",
@@ -22,7 +24,10 @@
   "license": "ISC",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
     "@vitest/ui": "^1.4.0",
+    "eslint": "^8.57.0",
     "jsdom": "^26.0.0",
     "vitest": "^1.4.0",
     "web-ext": "^7.11.0"
