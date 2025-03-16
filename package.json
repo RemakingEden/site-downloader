@@ -14,8 +14,8 @@
     "build": "web-ext build",
     "start": "web-ext run",
     "web-ext-lint": "web-ext lint",
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix"
+    "lint": "eslint . --ext .js --config ./config/.eslintrc.json",
+    "lint:fix": "eslint . --ext .js --config ./config/.eslintrc.json --fix"
   },
   "keywords": [
     "firefox",
