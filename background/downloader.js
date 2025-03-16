@@ -1,4 +1,9 @@
 export class WebDownloader {
+  /**
+   * Sanitizes a filename by removing invalid characters
+   * @param {string} name - The name to sanitize
+   * @returns {string} The sanitized name
+   */
   sanitizeName(name) {
     // Remove invalid filesystem characters and spaces
     return name
@@ -8,6 +13,11 @@ export class WebDownloader {
       .toLowerCase();                   // Convert to lowercase
   }
 
+  /**
+   * Extracts the website root name from a URL
+   * @param {string} url - The URL to process
+   * @returns {string} The website root name
+   */
   getWebsiteRoot(url) {
     try {
       const urlObj = new URL(url);
@@ -25,6 +35,11 @@ export class WebDownloader {
     }
   }
 
+  /**
+   * Gets a sanitized pathname from a URL
+   * @param {string} url - The URL to process
+   * @returns {string} The sanitized pathname
+   */
   getPathName(url) {
     try {
       const urlObj = new URL(url);
@@ -44,12 +59,24 @@ export class WebDownloader {
     }
   }
 
+  /**
+   * Creates a folder path from a base path and URL
+   * @param {string} basePath - The base path to use
+   * @param {string} url - The URL to process
+   * @returns {string} The complete folder path
+   */
   createFolderPath(basePath, url) {
     const websiteRoot = this.getWebsiteRoot(url);
     const pathName = this.getPathName(url);
     return `${basePath}/${websiteRoot}/${pathName}`;
   }
 
+  /**
+   * Gets all resources from an HTML page
+   * @param {string} html - The HTML content
+   * @param {string} baseUrl - The base URL of the page
+   * @returns {Promise<Array<{url: string, filename: string, type: string}>>} Array of resources
+   */
   async getPageResources(html, baseUrl) {
     const resources = [];
     const parser = new DOMParser();
@@ -155,6 +182,13 @@ export class WebDownloader {
     return resources;
   }
 
+  /**
+   * Downloads all resources to the specified path
+   * @param {Array<{url: string, filename: string, type: string}>} resources - The resources to download
+   * @param {string} basePath - The base path to save to
+   * @param {string} pageUrl - The URL of the page being downloaded
+   * @returns {Promise<{succeeded: Array, failed: Array}>} Results of the download operation
+   */
   async downloadResources(resources, basePath, pageUrl) {
     const results = {
       succeeded: [],
