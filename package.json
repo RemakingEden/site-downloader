@@ -14,8 +14,8 @@
     "build": "web-ext build",
     "start": "web-ext run",
     "web-ext-lint": "web-ext lint",
-    "lint": "eslint . --ext .ts,.js",
-    "lint:fix": "eslint . --ext .ts,.js --fix"
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
   },
   "keywords": [
     "firefox",
@@ -26,8 +26,6 @@
   "devDependencies": {
     "@babel/runtime": "^7.26.10",
     "@testing-library/jest-dom": "^6.6.3",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
-    "@typescript-eslint/parser": "^8.26.1",
     "@vitest/ui": "^3.0.8",
     "eslint": "^8.57.0",
     "jsdom": "^26.0.0",
