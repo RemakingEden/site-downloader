@@ -1,0 +1,41 @@
+.page-downloader {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.download-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.download-button:hover {
+  background-color: #1d4ed8;
+}
+
+.download-button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.status {
+  min-height: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.progress {
+  color: #2563eb;
+}
+
+.status:empty {
+  display: none;
+} 

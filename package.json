@@ -1,0 +1,30 @@
+{
+  "name": "firefox-download-js",
+  "version": "1.0.0",
+  "description": "A basic Firefox extension",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "TEST_TYPE=UI vitest run",
+    "test:unit": "TEST_TYPE=Unit vitest run",
+    "test:integration": "TEST_TYPE=Integration vitest run",
+    "test:all": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "build": "web-ext build",
+    "start": "web-ext run"
+  },
+  "keywords": [
+    "firefox",
+    "extension"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@vitest/ui": "^1.4.0",
+    "jsdom": "^26.0.0",
+    "vitest": "^1.4.0",
+    "web-ext": "^7.11.0"
+  }
+}

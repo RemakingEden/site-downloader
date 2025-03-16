@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Website Downloader</h1>
+    </div>
+
+    <div class="main-content">
+      <div class="download-path-display">
+        Downloads will be saved to: website-downloader
+      </div>
+      
+      <div id="page-downloader">
+        <div class="download-options">
+          <label>
+            <input type="checkbox" id="include-images" checked>
+            Download images
+          </label>
+          <label>
+            <input type="checkbox" id="include-css" checked>
+            Download CSS files
+          </label>
+          <label>
+            <input type="checkbox" id="include-js" checked>
+            Download JavaScript files
+          </label>
+        </div>
+
+        <div class="download-progress" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="progress-text">Downloading...</div>
+        </div>
+
+        <div class="actions">
+          <button class="download-button primary-button">Download Website</button>
+          <button class="cancel-button secondary-button" style="display: none;">Cancel Download</button>
+        </div>
+
+        <div class="status"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="status-message"></div>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html> 
