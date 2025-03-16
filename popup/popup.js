@@ -1,6 +1,8 @@
 import { PageDownloader } from '../ui/PageDownloader.js';
 
+/* eslint-disable no-unused-vars */
 async function initializeComponents() {
+/* eslint-enable no-unused-vars */
   try {
     console.log('Initializing components...');
     

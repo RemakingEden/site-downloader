@@ -1,5 +1,7 @@
 // Function to download resources
+/* eslint-disable no-unused-vars */
 async function downloadResource(url) {
+/* eslint-enable no-unused-vars */
   try {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -44,7 +46,9 @@ function getPageResources() {
 }
 
 // Listen for messages from the extension
+/* eslint-disable no-unused-vars */
 browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+/* eslint-enable no-unused-vars */
   if (message.action === 'getPageContent') {
     // Get the HTML content
     const htmlContent = document.documentElement.outerHTML;

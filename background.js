@@ -7,7 +7,9 @@ import { generateDownloadPath, getDomainFromUrl } from './utils/fileUtils.js';
 const websiteDownloads = new Map();
 
 // Listen for messages from popup
+/* eslint-disable no-unused-vars */
 browser.runtime.onMessage.addListener(async (message, sender) => {
+/* eslint-enable no-unused-vars */
   if (message.action === 'downloadWebsite') {
     try {
       // Get the active tab
@@ -39,7 +41,9 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       });
 
       // Download resources
+      /* eslint-disable no-unused-vars */
       for (const [type, urls] of Object.entries(resources)) {
+      /* eslint-enable no-unused-vars */
         for (const resourceUrl of urls) {
           try {
             const filename = new URL(resourceUrl).pathname.split('/').pop();
