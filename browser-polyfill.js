@@ -888,14 +888,17 @@
        */
 
 
-      const wrapMethod = (target, method, wrapper) => {
-        return new Proxy(method, {
-          apply(targetMethod, thisObj, args) {
-            return wrapper.call(thisObj, target, ...args);
-          }
+      function wrapMethod(target, method) {
+        return function() {
+          // ... existing code ...
+        };
+      }
 
-        });
-      };
+      function wrapProperty(target, property) {
+        return function() {
+          // ... existing code ...
+        };
+      }
 
       let hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
       /**
@@ -945,7 +948,7 @@
               // any wrapping.
               if (typeof wrappers[prop] === "function") {
                 // We have a special-case wrapper for this method.
-                value = wrapMethod(target, target[prop], wrappers[prop]);
+                value = wrapMethod(target, target[prop]);
               } else if (hasOwnProperty(metadata, prop)) {
                 // This is an async method that we have metadata for. Create a
                 // Promise wrapper for it.
@@ -1058,212 +1061,9 @@
         }
         /**
          * Wraps an onRequestFinished listener function so that it will return a
-         * `getContent()` property which returns a `Promise` rather than using a
-         * callback API.
-         *
-         * @param {object} req
-         *        The HAR entry object representing the network request.
+         * `getContent()` property which returns a `Promise`
          */
-
-
-        return function onRequestFinished(req) {
-          const wrappedReq = wrapObject(req, {}
-          /* wrappers */
-          , {
-            getContent: {
-              minArgs: 0,
-              maxArgs: 0
-            }
-          });
-          listener(wrappedReq);
-        };
       });
-      const onMessageWrappers = new DefaultWeakMap(listener => {
-        if (typeof listener !== "function") {
-          return listener;
-        }
-        /**
-         * Wraps a message listener function so that it may send responses based on
-         * its return value, rather than by returning a sentinel value and calling a
-         * callback. If the listener function returns a Promise, the response is
-         * sent when the promise either resolves or rejects.
-         *
-         * @param {*} message
-         *        The message sent by the other end of the channel.
-         * @param {object} sender
-         *        Details about the sender of the message.
-         * @param {function(*)} sendResponse
-         *        A callback which, when called with an arbitrary argument, sends
-         *        that value as a response.
-         * @returns {boolean}
-         *        True if the wrapped listener returned a Promise, which will later
-         *        yield a response. False otherwise.
-         */
-
-
-        return function onMessage(message, sender, sendResponse) {
-          let didCallSendResponse = false;
-          let wrappedSendResponse;
-          let sendResponsePromise = new Promise(resolve => {
-            wrappedSendResponse = function (response) {
-              didCallSendResponse = true;
-              resolve(response);
-            };
-          });
-          let result;
-
-          try {
-            result = listener(message, sender, wrappedSendResponse);
-          } catch (err) {
-            result = Promise.reject(err);
-          }
-
-          const isResultThenable = result !== true && isThenable(result); // If the listener didn't returned true or a Promise, or called
-          // wrappedSendResponse synchronously, we can exit earlier
-          // because there will be no response sent from this listener.
-
-          if (result !== true && !isResultThenable && !didCallSendResponse) {
-            return false;
-          } // A small helper to send the message if the promise resolves
-          // and an error if the promise rejects (a wrapped sendMessage has
-          // to translate the message into a resolved promise or a rejected
-          // promise).
-
-
-          const sendPromisedResult = promise => {
-            promise.then(msg => {
-              // send the message value.
-              sendResponse(msg);
-            }, error => {
-              // Send a JSON representation of the error if the rejected value
-              // is an instance of error, or the object itself otherwise.
-              let message;
-
-              if (error && (error instanceof Error || typeof error.message === "string")) {
-                message = error.message;
-              } else {
-                message = "An unexpected error occurred";
-              }
-
-              sendResponse({
-                __mozWebExtensionPolyfillReject__: true,
-                message
-              });
-            }).catch(err => {
-              // Print an error on the console if unable to send the response.
-              console.error("Failed to send onMessage rejected reply", err);
-            });
-          }; // If the listener returned a Promise, send the resolved value as a
-          // result, otherwise wait the promise related to the wrappedSendResponse
-          // callback to resolve and send it as a response.
-
-
-          if (isResultThenable) {
-            sendPromisedResult(result);
-          } else {
-            sendPromisedResult(sendResponsePromise);
-          } // Let Chrome know that the listener is replying.
-
-
-          return true;
-        };
-      });
-
-      const wrappedSendMessageCallback = ({
-        reject,
-        resolve
-      }, reply) => {
-        if (extensionAPIs.runtime.lastError) {
-          // Detect when none of the listeners replied to the sendMessage call and resolve
-          // the promise to undefined as in Firefox.
-          // See https://github.com/mozilla/webextension-polyfill/issues/130
-          if (extensionAPIs.runtime.lastError.message === CHROME_SEND_MESSAGE_CALLBACK_NO_RESPONSE_MESSAGE) {
-            resolve();
-          } else {
-            reject(new Error(extensionAPIs.runtime.lastError.message));
-          }
-        } else if (reply && reply.__mozWebExtensionPolyfillReject__) {
-          // Convert back the JSON representation of the error into
-          // an Error instance.
-          reject(new Error(reply.message));
-        } else {
-          resolve(reply);
-        }
-      };
-
-      const wrappedSendMessage = (name, metadata, apiNamespaceObj, ...args) => {
-        if (args.length < metadata.minArgs) {
-          throw new Error(`Expected at least ${metadata.minArgs} ${pluralizeArguments(metadata.minArgs)} for ${name}(), got ${args.length}`);
-        }
-
-        if (args.length > metadata.maxArgs) {
-          throw new Error(`Expected at most ${metadata.maxArgs} ${pluralizeArguments(metadata.maxArgs)} for ${name}(), got ${args.length}`);
-        }
-
-        return new Promise((resolve, reject) => {
-          const wrappedCb = wrappedSendMessageCallback.bind(null, {
-            resolve,
-            reject
-          });
-          args.push(wrappedCb);
-          apiNamespaceObj.sendMessage(...args);
-        });
-      };
-
-      const staticWrappers = {
-        devtools: {
-          network: {
-            onRequestFinished: wrapEvent(onRequestFinishedWrappers)
-          }
-        },
-        runtime: {
-          onMessage: wrapEvent(onMessageWrappers),
-          onMessageExternal: wrapEvent(onMessageWrappers),
-          sendMessage: wrappedSendMessage.bind(null, "sendMessage", {
-            minArgs: 1,
-            maxArgs: 3
-          })
-        },
-        tabs: {
-          sendMessage: wrappedSendMessage.bind(null, "sendMessage", {
-            minArgs: 2,
-            maxArgs: 3
-          })
-        }
-      };
-      const settingMetadata = {
-        clear: {
-          minArgs: 1,
-          maxArgs: 1
-        },
-        get: {
-          minArgs: 1,
-          maxArgs: 1
-        },
-        set: {
-          minArgs: 1,
-          maxArgs: 1
-        }
-      };
-      apiMetadata.privacy = {
-        network: {
-          "*": settingMetadata
-        },
-        services: {
-          "*": settingMetadata
-        },
-        websites: {
-          "*": settingMetadata
-        }
-      };
-      return wrapObject(extensionAPIs, staticWrappers, apiMetadata);
-    }; // The build process adds a UMD wrapper around this file, which makes the
-    // `module` variable available.
-
-
-    module.exports = wrapAPIs(chrome);
-  } else {
-    module.exports = globalThis.browser;
+    }
   }
 });
-//# sourceMappingURL=browser-polyfill.js.map
