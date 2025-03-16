@@ -31,6 +31,6 @@ describe('Background Script', () => {
     // Verify both messages were logged in correct order
     expect(consoleSpy).toHaveBeenCalledTimes(2);
     expect(consoleSpy).toHaveBeenNthCalledWith(1, 'Background script loaded');
-    expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Extension initialized');
+    expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Website downloader extension initialized');
   });
 }); 

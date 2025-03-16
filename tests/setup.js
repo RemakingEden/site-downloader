@@ -30,6 +30,26 @@ global.browser = {
       get: vi.fn(),
       set: vi.fn()
     }
+  },
+  runtime: {
+    onMessage: {
+      addListener: vi.fn()
+    }
+  },
+  tabs: {
+    query: vi.fn(),
+    sendMessage: vi.fn()
+  },
+  downloads: {
+    download: vi.fn(),
+    cancel: vi.fn(),
+    resume: vi.fn(),
+    onCreated: {
+      addListener: vi.fn()
+    },
+    onChanged: {
+      addListener: vi.fn()
+    }
   }
 };
 
