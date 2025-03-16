@@ -19,4 +19,30 @@ async function initializeComponents() {
 }
 
 // Initialize components when the popup loads
-document.addEventListener('DOMContentLoaded', initializeComponents); 
+document.addEventListener('DOMContentLoaded', () => {
+  const downloadButton = document.querySelector('.download-button');
+  const statusDiv = document.querySelector('.status');
+  const progressDiv = document.querySelector('.download-progress');
+  
+  downloadButton.addEventListener('click', async () => {
+    try {
+      // Show progress
+      downloadButton.disabled = true;
+      progressDiv.style.display = 'block';
+      statusDiv.textContent = 'Starting download...';
+
+      // Send message to background script to start download
+      await browser.runtime.sendMessage({
+        action: 'downloadWebsite'
+      });
+
+      statusDiv.textContent = 'Download started successfully!';
+    } catch (error) {
+      console.error('Failed to start download:', error);
+      statusDiv.textContent = `Error: ${error.message}`;
+    } finally {
+      downloadButton.disabled = false;
+      progressDiv.style.display = 'none';
+    }
+  });
+}); 
