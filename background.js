@@ -7,10 +7,8 @@ import { generateDownloadPath, getDomainFromUrl } from './utils/fileUtils.js';
 const websiteDownloads = new Map();
 
 // Listen for messages from popup
-/* eslint-disable no-unused-vars */
-browser.runtime.onMessage.addListener(async (message, sender) => {
-/* eslint-enable no-unused-vars */
-  if (message.action === 'downloadWebsite') {
+browser.runtime.onMessage.addListener(async (_message, _sender) => {
+  if (_message.action === 'downloadWebsite') {
     try {
       // Get the active tab
       const tabs = await browser.tabs.query({active: true, currentWindow: true});
@@ -22,7 +20,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       });
 
       const { html, resources, url } = response;
-      const domain = getDomainFromUrl(url);
+      
+      const _domain = getDomainFromUrl(url);
       
       console.log('Found resources:', {
         scripts: resources.scripts.length,
@@ -49,16 +48,14 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       });
 
       // Download resources
-      /* eslint-disable no-unused-vars */
-      for (const [type, urls] of Object.entries(resources)) {
-      /* eslint-enable no-unused-vars */
-        console.log(`Processing ${type} resources...`);
+      for (const [_type, urls] of Object.entries(resources)) {
+        console.log(`Processing ${_type} resources...`);
         for (const resourceUrl of urls) {
           try {
             const filename = new URL(resourceUrl).pathname.split('/').pop();
             if (!filename) continue;
 
-            console.log(`Downloading ${type}: ${resourceUrl}`);
+            console.log(`Downloading ${_type}: ${resourceUrl}`);
             const downloadId = await browser.downloads.download({
               url: resourceUrl,
               filename: generateDownloadPath(filename, '', url, false),
@@ -70,7 +67,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
               isMainPage: false
             });
           } catch (error) {
-            console.error(`Failed to download ${type} resource ${resourceUrl}:`, error);
+            console.error(`Failed to download ${_type} resource ${resourceUrl}:`, error);
           }
         }
       }
