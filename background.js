@@ -38,7 +38,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       // Download main HTML file
       const mainDownloadId = await browser.downloads.download({
         url: URL.createObjectURL(htmlBlob),
-        filename: `website-downloader/${domain}/index.html`,
+        filename: generateDownloadPath('index.html', 'text/html', url, true),
         conflictAction: 'uniquify'
       });
       
