@@ -24,6 +24,14 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       const { html, resources, url } = response;
       const domain = getDomainFromUrl(url);
       
+      console.log('Found resources:', {
+        scripts: resources.scripts.length,
+        styles: resources.styles.length,
+        images: resources.images.length,
+        fonts: resources.fonts.length,
+        other: resources.other.length
+      });
+      
       // Create a blob from the HTML content
       const htmlBlob = new Blob([html], { type: 'text/html' });
       
@@ -44,11 +52,13 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       /* eslint-disable no-unused-vars */
       for (const [type, urls] of Object.entries(resources)) {
       /* eslint-enable no-unused-vars */
+        console.log(`Processing ${type} resources...`);
         for (const resourceUrl of urls) {
           try {
             const filename = new URL(resourceUrl).pathname.split('/').pop();
             if (!filename) continue;
 
+            console.log(`Downloading ${type}: ${resourceUrl}`);
             const downloadId = await browser.downloads.download({
               url: resourceUrl,
               filename: generateDownloadPath(filename, '', url, false),
@@ -60,7 +70,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
               isMainPage: false
             });
           } catch (error) {
-            console.error(`Failed to download resource ${resourceUrl}:`, error);
+            console.error(`Failed to download ${type} resource ${resourceUrl}:`, error);
           }
         }
       }
