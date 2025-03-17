@@ -47,6 +47,20 @@ export function getDomainFromUrl(url) {
 }
 
 /**
+ * Converts a URL path to snake case format
+ * @param {string} path - The URL path to convert
+ * @returns {string} - The path in snake case format
+ */
+function pathToSnakeCase(path) {
+  if (!path || path === '/') return 'root';
+  return path
+    .split('/')
+    .filter(Boolean)
+    .join('-')
+    .toLowerCase();
+}
+
+/**
  * Generates the download path for a file
  * @param {string} filename - The original filename
  * @param {string} mimeType - The MIME type of the file
@@ -56,10 +70,12 @@ export function getDomainFromUrl(url) {
  */
 export function generateDownloadPath(filename, mimeType, url, isMainPage = false) {
   const domain = getDomainFromUrl(url);
-  const baseDir = `website-downloader/${domain}`;
+  const urlObj = new URL(url);
+  const path = pathToSnakeCase(urlObj.pathname);
+  const baseDir = `website-downloader/${domain}/${path}`;
   
   if (isMainPage) {
-    return `${baseDir}/index.html`;
+    return `${baseDir}/pages/index.html`;
   }
 
   const folder = determineFileType(filename, mimeType);
