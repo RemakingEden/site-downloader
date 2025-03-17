@@ -20,7 +20,6 @@ browser.runtime.onMessage.addListener(async (_message, _sender) => {
       });
 
       const { html, resources, url } = response;
-      
       const _domain = getDomainFromUrl(url);
       
       console.log('Found resources:', {
@@ -47,7 +46,7 @@ browser.runtime.onMessage.addListener(async (_message, _sender) => {
         isMainPage: true
       });
 
-      // Download resources
+      // Download all resources
       for (const [_type, urls] of Object.entries(resources)) {
         console.log(`Processing ${_type} resources...`);
         for (const resourceUrl of urls) {
