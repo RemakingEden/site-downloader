@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Website Downloader",
-  "version": "1.0",
+  "name": "Site Downloader",
+  "version": "0.1",
   "description": "Download websites for offline viewing",
   "icons": {
     "48": "icons/icon-48.png",
